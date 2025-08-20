@@ -1,0 +1,103 @@
+{
+    "pipeline": {
+        "name": "CrossAccountS",
+        "roleArn": "arn:aws:iam::079700436326:role/service-role/AWSCodePipelineServiceRole-ap-northeast-1-CrossAccountS",
+        "artifactStore": {
+            "type": "S3",
+            "location": "codepipeline-ap-northeast-1-433167725079",
+            "encryptionKey": {
+                "id": "arn:aws:kms:ap-northeast-1:079700436326:alias/PipelineKey",
+                "type": "KMS"
+            }
+        },
+        "stages": [
+            {
+                "name": "Source",
+                "actions": [
+                    {
+                        "name": "Source",
+                        "actionTypeId": {
+                            "category": "Source",
+                            "owner": "AWS",
+                            "provider": "CodeCommit",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "BranchName": "main",
+                            "OutputArtifactFormat": "CODE_ZIP",
+                            "PollForSourceChanges": "false",
+                            "RepositoryName": "unicorn-web-project"
+                        },
+                        "outputArtifacts": [
+                            {
+                                "name": "SourceArtifact"
+                            }
+                        ],
+                        "inputArtifacts": [],
+                        "region": "ap-northeast-1",
+                        "namespace": "SourceVariables"
+                    }
+                ]
+            },
+            {
+                "name": "Build",
+                "actions": [
+                    {
+                        "name": "Build",
+                        "actionTypeId": {
+                            "category": "Build",
+                            "owner": "AWS",
+                            "provider": "CodeBuild",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "configuration": {
+                            "ProjectName": "unicorn-web-build"
+                        },
+                        "outputArtifacts": [
+                            {
+                                "name": "BuildArtifact"
+                            }
+                        ],
+                        "inputArtifacts": [
+                            {
+                                "name": "SourceArtifact"
+                            }
+                        ],
+                        "region": "ap-northeast-1",
+                        "namespace": "BuildVariables"
+                    }
+                ]
+            },
+            {
+                "name": "Staging",
+                "actions": [
+                    {
+                        "name": "ExternalDeploy",
+                        "actionTypeId": {
+                            "category": "Deploy",
+                            "owner": "AWS",
+                            "provider": "CodeDeploy",
+                            "version": "1"
+                        },
+                        "runOrder": 1,
+                        "roleArn": "arn:aws:iam::477973761877:role/CrossDeployRole",
+                        "configuration": {
+                            "ApplicationName": "CrossDeploy",
+                            "DeploymentGroupName": "CrossDeployGroup"
+                        },
+                        "outputArtifacts": [],
+                        "inputArtifacts": [
+                            {
+                                "name": "BuildArtifact"
+                            }
+                        ],
+                        "region": "ap-northeast-1"
+                    }
+                ]
+            }
+        ],
+        "version": 2
+    }
+}
