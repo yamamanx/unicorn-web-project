@@ -1,31 +1,16 @@
 <settings>
-        <profiles>
+    <profiles>
         <profile>
-            <id>unicorns-unicorn-packages</id>
+            <id>default</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
             <repositories>
                 <repository>
-                    <id>unicorns-unicorn-packages</id>
-                    <url>https://unicorns-079700436326.d.codeartifact.ap-northeast-1.amazonaws.com/maven/unicorn-packages/</url>
+                    <id>central</id>
+                    <url>https://repo1.maven.org/maven2</url>
                 </repository>
             </repositories>
         </profile>
     </profiles>
-    <servers>
-        <server>
-            <id>unicorns-unicorn-packages</id>
-            <username>aws</username>
-            <password>${env.CODEARTIFACT_AUTH_TOKEN}</password>
-        </server>
-    </servers>
-    <mirrors>
-        <mirror>
-            <id>unicorns-unicorn-packages</id>
-            <name>unicorns-unicorn-packages</name>
-            <url>https://unicorns-079700436326.d.codeartifact.ap-northeast-1.amazonaws.com/maven/unicorn-packages/</url>
-            <mirrorOf>*</mirrorOf>
-        </mirror>
-    </mirrors>
 </settings>

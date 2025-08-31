@@ -7,14 +7,15 @@ phases:
   pre_build:
     commands:
       - echo Initializing environment
+      - export CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain unicorns --domain-owner 079700436326 --query authorizationToken --output text`
   build:
     commands:
       - echo Build started on `date`
-      - mvn compile
+      - mvn -s settings.xml compile
   post_build:
     commands:
       - echo Build completed on `date`
-      - mvn package
+      - mvn -s settings.xml package
       
 artifacts:
   files:
